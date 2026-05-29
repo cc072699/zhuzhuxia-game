@@ -195,6 +195,69 @@ canvas{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh}
 .ef{font-size:clamp(14px,2vw,22px);color:#e91e63;font-weight:bold;margin:4px 0}
 .ed{font-size:clamp(11px,1.4vw,16px);color:rgba(255,255,255,0.4)}
 .gs{background:rgba(255,255,255,0.03);border-radius:clamp(8px,1vw,14px);padding:clamp(8px,1.2vh,16px) clamp(12px,1.8vw,20px);margin:clamp(6px,1vh,12px) 0;font-size:clamp(12px,1.6vw,18px);color:#ccc;line-height:1.8;text-align:left}
+
+/* ===== BETTER STATS BARS ===== */
+.stat-p{background:rgba(0,0,0,0.25);border-radius:6px;padding:clamp(2px,0.3vh,5px) clamp(8px,1.2vw,14px) clamp(2px,0.3vh,5px) clamp(5px,0.8vw,10px);font-size:clamp(10px,1.3vw,15px);gap:clamp(3px,0.5vw,6px)}
+.stat-p .spi{font-size:clamp(12px,1.6vw,18px)}
+.stat-p .spv{font-size:clamp(11px,1.4vw,16px);min-width:clamp(16px,2.2vw,26px)}
+.stat-p .spb{width:clamp(40px,6vw,80px);height:clamp(6px,0.8vh,12px);border-radius:4px}
+.stat-p .spf{border-radius:4px;transition:width 0.35s;position:relative}
+.stat-p .spf::after{content:'';position:absolute;top:1px;left:3px;right:3px;height:2px;background:rgba(255,255,255,0.2);border-radius:2px}
+
+/* ===== ARENA ===== */
+.arena{position:fixed;top:0;left:0;width:100%;height:100%;z-index:90;background:linear-gradient(135deg,#1a0000,#2d0000,#1a0000);display:none;flex-direction:column;align-items:center;justify-content:center;padding:10px}
+.arena.show{display:flex}
+.arena .atop{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:500px;margin-bottom:4px}
+.arena .atop .timer{color:#ffd600;font-size:clamp(18px,3vw,32px);font-weight:bold;text-shadow:0 0 20px rgba(255,214,0,0.3)}
+.arena .atop .vs-text{color:rgba(255,255,255,0.3);font-size:clamp(12px,1.6vw,20px);font-weight:bold}
+.arena .afighters{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:500px;gap:8px}
+.arena .afighter{text-align:center;flex:1}
+.arena .afighter .achar{font-size:clamp(40px,10vw,100px);animation:afight 0.3s ease}
+@keyframes afight{0%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-4px)}100%{transform:translateX(0)}}
+.arena .afighter .aname{color:#fff;font-size:clamp(11px,1.6vw,20px);font-weight:bold;margin:2px 0}
+.arena .ahp-wrap{background:rgba(255,255,255,0.1);border-radius:6px;height:clamp(12px,2vh,24px);overflow:hidden;position:relative;border:2px solid rgba(255,255,255,0.1)}
+.arena .ahp-fill{height:100%;border-radius:4px;transition:width 0.2s ease;position:relative}
+.arena .ahp-fill::after{content:'';position:absolute;top:1px;left:4px;right:4px;height:4px;background:rgba(255,255,255,0.2);border-radius:4px}
+.arena .ahp-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:clamp(9px,1.2vw,14px);font-weight:bold;text-shadow:0 1px 4px rgba(0,0,0,0.5)}
+.arena .avs{font-size:clamp(28px,5vw,50px);margin:0 6px;filter:drop-shadow(0 0 20px rgba(255,214,0,0.3));animation:avsPulse 1s infinite}
+@keyframes avsPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.arena .adamage{position:absolute;font-weight:bold;font-size:clamp(20px,4vw,40px);pointer-events:none;animation:adamage 0.8s ease-out forwards;text-shadow:0 0 20px rgba(255,0,0,0.5)}
+@keyframes adamage{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(1.3)}}
+.arena .aactions{display:flex;gap:8px;margin-top:10px;justify-content:center}
+.arena .aactions button{background:linear-gradient(135deg,#e53935,#b71c1c);border:none;border-radius:12px;padding:clamp(8px,1.2vh,16px) clamp(12px,2vw,24px);color:#fff;font-size:clamp(13px,2vw,22px);font-weight:bold;cursor:pointer;font-family:inherit;transition:0.08s;box-shadow:0 4px 16px rgba(0,0,0,0.3);min-width:clamp(70px,12vw,100px)}
+.arena .aactions button:active{transform:scale(0.9)}
+.arena .aactions button:disabled{opacity:0.4;transform:none;cursor:not-allowed}
+.arena .aactions .acooldown{position:relative;opacity:0.6}
+.arena .aactions .acooldown::after{content:attr(data-cd);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:20px;font-weight:bold}
+.arena .aresult{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:5}
+.arena .aresult .rtext{font-size:clamp(32px,7vw,60px);font-weight:bold;margin:6px 0;text-shadow:0 0 40px rgba(255,214,0,0.3)}
+.arena .aresult .rsub{font-size:clamp(14px,2vw,24px);color:rgba(255,255,255,0.5)}
+.arena .aresult .rrew{font-size:clamp(14px,2.2vw,26px);color:#ffd600;margin:4px 0}
+.arena .aresult button{background:linear-gradient(135deg,#e91e63,#c2185b);border:none;border-radius:30px;padding:clamp(8px,1.2vh,16px) clamp(24px,4vw,40px);font-size:clamp(14px,2vw,22px);color:#fff;cursor:pointer;font-family:inherit;font-weight:bold;margin-top:8px;box-shadow:0 4px 16px rgba(233,30,99,0.3)}
+.arena .ashake{animation:ashake 0.15s ease}
+@keyframes ashake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}50%{transform:translateX(10px)}75%{transform:translateX(-5px)}}
+
+/* ===== REVIVE ===== */
+.revive-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:70;background:rgba(0,0,0,0.6);display:none;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.revive-overlay.show{display:flex}
+.revive-box{text-align:center;background:rgba(30,30,50,0.9);border-radius:20px;padding:clamp(16px,2.5vh,28px) clamp(20px,3vw,36px);border:1px solid rgba(255,255,255,0.06)}
+.revive-box .r-icon{font-size:clamp(40px,8vw,70px)}
+.revive-box .r-title{color:#fff;font-size:clamp(18px,2.5vw,28px);font-weight:bold;margin:4px 0}
+.revive-box .r-sub{color:rgba(255,255,255,0.4);font-size:clamp(12px,1.6vw,18px)}
+.revive-box button{background:linear-gradient(135deg,#4caf50,#1b5e20);border:none;border-radius:30px;padding:clamp(8px,1.2vh,14px) clamp(24px,4vw,40px);font-size:clamp(14px,2vw,22px);color:#fff;cursor:pointer;font-family:inherit;font-weight:bold;margin-top:12px;box-shadow:0 4px 16px rgba(76,175,80,0.3);transition:0.1s}
+.revive-box button:active{transform:scale(0.95)}
+
+/* ===== FRIENDS ===== */
+.friend-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:3px 8px;font-size:clamp(9px,1.2vw,14px);color:#fff;cursor:pointer;font-family:inherit;margin-left:4px}
+.friend-panel{position:fixed;top:clamp(56px,8vh,90px);left:clamp(6px,1.5vw,16px);z-index:15;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);border-radius:12px;border:1px solid rgba(255,255,255,0.06);padding:clamp(8px,1.2vh,14px) clamp(10px,1.5vw,16px);min-width:clamp(120px,18vw,200px);display:none;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.friend-panel.show{display:block}
+.friend-panel h3{font-size:clamp(11px,1.4vw,16px);color:#90caf9;margin-bottom:4px}
+.friend-item{display:flex;align-items:center;justify-content:space-between;padding:2px 0;font-size:clamp(9px,1.2vw,14px);color:#ddd}
+.friend-item .fonline{color:#4caf50;font-size:8px}
+.friend-item .foffline{color:rgba(255,255,255,0.2);font-size:8px}
+.friend-add-row{display:flex;gap:4px;margin-top:4px}
+.friend-add-row input{flex:1;background:rgba(255,255,255,0.06);border:none;border-radius:6px;padding:3px 6px;font-size:clamp(8px,1vw,13px);color:#fff;outline:none;font-family:inherit}
+.friend-add-row button{background:rgba(255,255,255,0.08);border:none;border-radius:6px;padding:3px 8px;font-size:clamp(8px,1vw,12px);color:#fff;cursor:pointer;font-family:inherit}
 </style>
 </head>
 <body>
@@ -217,6 +280,50 @@ canvas{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh}
     <div>🤚摸头互动</div><div>💪训练加力量</div>
     <div>⭐小游戏赚币</div><div>🎯Lv5/10/15/20进化</div>
   </div>
+</div>
+
+<!-- ===== ARENA ===== -->
+<div class="arena" id="arena">
+  <div class="atop">
+    <div class="timer" id="arenaTimer">20</div>
+    <div class="vs-text">⚔️ 角斗场 ⚔️</div>
+    <div style="color:rgba(255,255,255,0.3);font-size:clamp(10px,1.4vw,16px)" id="arenaRound">1/1</div>
+  </div>
+  <div class="afighters" id="arenaFighters">
+    <div class="afighter" id="arenaP1">
+      <div class="achar" id="arenaChar1">🐷</div>
+      <div class="aname" id="arenaName1">玩家1</div>
+      <div class="ahp-wrap"><div class="ahp-fill" id="arenaHp1" style="width:100%;background:linear-gradient(90deg,#e53935,#ff6f00)"></div><span class="ahp-text" id="arenaHpTxt1">100</span></div>
+    </div>
+    <div class="avs" id="arenaVs">⚔️VS⚔️</div>
+    <div class="afighter" id="arenaP2">
+      <div class="achar" id="arenaChar2">🦸</div>
+      <div class="aname" id="arenaName2">玩家2</div>
+      <div class="ahp-wrap"><div class="ahp-fill" id="arenaHp2" style="width:100%;background:linear-gradient(90deg,#2196f3,#00bcd4)"></div><span class="ahp-text" id="arenaHpTxt2">100</span></div>
+    </div>
+  </div>
+  <div class="aactions" id="arenaActions">
+    <button onclick="arenaAttack('punch')" id="btnPunch">👊 拳击</button>
+    <button onclick="arenaAttack('kick')" id="btnKick">🦶 踢腿</button>
+    <button onclick="arenaAttack('special')" id="btnSpecial">💥 必杀技</button>
+  </div>
+</div>
+
+<!-- ===== REVIVE OVERLAY ===== -->
+<div class="revive-overlay" id="reviveOverlay">
+  <div class="revive-box">
+    <div class="r-icon">💀</div>
+    <div class="r-title">猪猪侠战败了！</div>
+    <div class="r-sub">点击复活继续游戏</div>
+    <button onclick="reviveMe()">🔄 原地复活</button>
+  </div>
+</div>
+
+<!-- ===== FRIEND PANEL ===== -->
+<div class="friend-panel" id="friendPanel">
+  <h3>👥 好友 <span style="color:rgba(255,255,255,0.2);font-size:9px;cursor:pointer" id="friendClose">✕</span></h3>
+  <div id="friendList"><div style="color:rgba(255,255,255,0.2);font-size:10px;padding:2px 0">还没有好友</div></div>
+  <div class="friend-add-row"><input type="text" id="friendInput" placeholder="输入昵称添加" maxlength="10"><button onclick="addFriend()">添加</button></div>
 </div>
 
 <!-- ===== LOBBY ===== -->
@@ -542,6 +649,25 @@ function handleServerMsg(msg){
     case 'battle_rejected':
       msg('❌对方拒绝了挑战');
       break;
+    case 'battle_start':
+      showArena(msg);
+      break;
+    case 'battle_update':
+      arenaUpdate(msg);
+      break;
+    case 'battle_end':
+      showArenaResult(msg);
+      break;
+    case 'player_revived':
+      if(msg.playerId===MP.myId){
+        const me_=msg.players.find(p=>p.id===MP.myId);
+        if(me_)syncStatsFromServer(me_);
+        msg('🔄已复活！');
+      }else{
+        msg('🔄'+(msg.player?msg.player.nickname:'')+'复活了！');
+        MP.players=msg.players||[];
+      }
+      break;
     case 'chat':
       addChat(msg.nickname,msg.text);
       break;
@@ -743,6 +869,198 @@ function leaveOnlineGame(){
   document.getElementById('msgW').style.display='none';
 }
 
+// ===================== ACCOUNT SYSTEM (localStorage) =====================
+const SAVE_KEY='zhuzhuxia_save';
+function saveGame(){
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify({
+    coin:S.coin,lv:S.lv,exp:S.exp,
+    fn:S.fn,cl:S.cl,en:S.en,hp:S.hp,st:S.st,
+    inv:S.inv,
+  }));}catch(e){}
+}
+function loadGame(){
+  try{
+    const d=JSON.parse(localStorage.getItem(SAVE_KEY));
+    if(d){S.coin=d.coin||30;S.lv=d.lv||1;S.exp=d.exp||0;
+      S.fn=d.fn||70;S.cl=d.cl||80;S.en=d.en||60;S.hp=d.hp||65;S.st=d.st||10;
+      S.inv=d.inv||{};}
+  }catch(e){}
+}
+loadGame(); // Load on start
+// Auto-save every 10 seconds
+setInterval(saveGame, 10000);
+
+// ===================== BATTLE ARENA =====================
+let arenaActive=false;
+let arenaMyId=null;
+let arenaOppId=null;
+let arenaTimer=null;
+
+function showArena(data){
+  const arena=document.getElementById('arena');
+  arena.classList.add('show');
+  arenaActive=true;
+  arenaMyId=MP.myId;
+  arenaOppId=data.p1Id===MP.myId?data.p2Id:data.p1Id;
+
+  const isP1=data.p1Id===MP.myId;
+  document.getElementById('arenaChar1').textContent=stage(isP1?S.lv:(MP.players.find(p=>p.id===data.p2Id)?.lv||1)).ic;
+  document.getElementById('arenaName1').textContent=isP1?data.p1Nick:data.p2Nick;
+  document.getElementById('arenaChar2').textContent=stage(!isP1?S.lv:(MP.players.find(p=>p.id===data.p1Id)?.lv||1)).ic;
+  document.getElementById('arenaName2').textContent=!isP1?data.p1Nick:data.p2Nick;
+
+  document.getElementById('arenaHp1').style.width='100%';
+  document.getElementById('arenaHp2').style.width='100%';
+  document.getElementById('arenaHpTxt1').textContent=data.p1Hp;
+  document.getElementById('arenaHpTxt2').textContent=data.p2Hp;
+
+  let timeLeft=data.duration||20;
+  document.getElementById('arenaTimer').textContent=timeLeft;
+  if(arenaTimer)clearInterval(arenaTimer);
+  arenaTimer=setInterval(()=>{
+    timeLeft--;
+    document.getElementById('arenaTimer').textContent=Math.max(0,timeLeft);
+    if(timeLeft<=0){clearInterval(arenaTimer);arenaTimer=null;}
+  },1000);
+
+  document.getElementById('btnPunch').disabled=false;
+  document.getElementById('btnKick').disabled=false;
+  document.getElementById('btnSpecial').disabled=false;
+  document.getElementById('btnSpecial').className='';
+  document.getElementById('btnSpecial').textContent='💥 必杀技';
+}
+
+function arenaUpdate(data){
+  const p1HpPct=(data.p1Hp/data.p1MaxHp*100);
+  const p2HpPct=(data.p2Hp/data.p2MaxHp*100);
+  document.getElementById('arenaHp1').style.width=Math.max(0,p1HpPct)+'%';
+  document.getElementById('arenaHp2').style.width=Math.max(0,p2HpPct)+'%';
+  document.getElementById('arenaHpTxt1').textContent=data.p1Hp;
+  document.getElementById('arenaHpTxt2').textContent=data.p2Hp;
+
+  // Show damage number on opponent
+  const isAttacker=data.attackerId===MP.myId;
+  const targetEl=isAttacker?document.getElementById('arenaP2'):document.getElementById('arenaP1');
+  const dmgEl=document.createElement('div');
+  dmgEl.className='adamage';
+  dmgEl.textContent='-'+data.damage;
+  dmgEl.style.color=isAttacker?'#ff6f00':'#e53935';
+  dmgEl.style.left=(isAttacker?'70%':'30%');
+  dmgEl.style.top='40%';
+  targetEl.appendChild(dmgEl);
+  setTimeout(()=>dmgEl.remove(),800);
+
+  // Shake opponent
+  const oppChar=isAttacker?document.getElementById('arenaChar2'):document.getElementById('arenaChar1');
+  oppChar.classList.remove('ashake');
+  void oppChar.offsetWidth;
+  oppChar.classList.add('ashake');
+  setTimeout(()=>oppChar.classList.remove('ashake'),300);
+
+  // Flash HP bar
+  const hpEl=isAttacker?document.getElementById('arenaHp2'):document.getElementById('arenaHp1');
+  hpEl.style.transition='width 0.15s';
+  setTimeout(()=>{hpEl.style.transition='width 0.2s ease';},200);
+
+  // Cooldown for special
+  const btn=document.getElementById('btnSpecial');
+  if(data.action==='special'&&data.attackerId===MP.myId){
+    btn.disabled=true;btn.className='acooldown';btn.dataset.cd='3';
+    let cd=3;const ci=setInterval(()=>{cd--;btn.dataset.cd=cd;if(cd<=0){clearInterval(ci);btn.disabled=false;btn.className='';btn.dataset.cd='';btn.textContent='💥 必杀技';}},1000);
+  }
+}
+
+function showArenaResult(data){
+  if(arenaTimer){clearInterval(arenaTimer);arenaTimer=null;}
+  const arena=document.getElementById('arena');
+  arenaActive=false;
+
+  const isWinner=data.winnerId===MP.myId;
+  const myChar=document.querySelector(isWinner?'#arenaChar1':'#arenaChar2');
+  const rDiv=document.createElement('div');
+  rDiv.className='aresult';
+  rDiv.innerHTML=`
+    <div style="font-size:clamp(48px,8vw,80px)">${isWinner?'🎉':'😅'}</div>
+    <div class="rtext" style="color:${isWinner?'#ffd600':'rgba(255,255,255,0.5)'}">${isWinner?'胜利！':'战败'}</div>
+    <div class="rsub">${data.winnerNick} VS ${data.loserNick}</div>
+    ${data.expReward?`<div class="rrew">🏆 +${data.expReward}EXP +${data.coinReward}🪙</div>`:''}
+    <button onclick="closeArena()">确认</button>
+  `;
+  arena.appendChild(rDiv);
+
+  // Update player stats
+  if(data.players){
+    const me=data.players.find(p=>p.id===MP.myId);
+    if(me)syncStatsFromServer(me);
+  }
+}
+
+function closeArena(){
+  document.getElementById('arena').classList.remove('show');
+  const r=document.querySelector('.aresult');
+  if(r)r.remove();
+}
+
+function arenaAttack(action){
+  if(!arenaActive||!WS||WS.readyState!==WebSocket.OPEN)return;
+  WS.send(JSON.stringify({type:'battle_action',action}));
+  // Visual feedback
+  if(action==='punch'){
+    document.getElementById('arenaChar1').classList.remove('ashake');
+    void document.getElementById('arenaChar1').offsetWidth;
+    document.getElementById('arenaChar1').classList.add('ashake');
+  }
+}
+
+// ===================== REVIVE =====================
+function showRevive(){
+  if(MODE!=='online')return;
+  document.getElementById('reviveOverlay').classList.add('show');
+}
+
+function reviveMe(){
+  if(!WS||WS.readyState!==WebSocket.OPEN)return;
+  WS.send(JSON.stringify({type:'revive'}));
+  document.getElementById('reviveOverlay').classList.remove('show');
+  dead=false;
+  // Server will reset our stats and broadcast
+}
+
+// ===================== FRIENDS =====================
+let friends=[];
+
+function loadFriends(){
+  try{const d=JSON.parse(localStorage.getItem('zhuzhuxia_friends'));if(d)friends=d;}catch(e){}
+}
+function saveFriends(){try{localStorage.setItem('zhuzhuxia_friends',JSON.stringify(friends));}catch(e){}}
+loadFriends();
+
+function addFriend(){
+  const inp=document.getElementById('friendInput');
+  const nick=inp.value.trim();
+  if(!nick||friends.includes(nick))return;
+  friends.push(nick);saveFriends();renderFriends();inp.value='';
+  // Check if online
+  if(WS&&WS.readyState===WebSocket.OPEN)
+    WS.send(JSON.stringify({type:'friend_online',nickname:nick}));
+}
+function removeFriend(nick){
+  friends=friends.filter(f=>f!==nick);
+  saveFriends();renderFriends();
+}
+function renderFriends(){
+  const el=document.getElementById('friendList');
+  if(!friends.length){el.innerHTML='<div style="color:rgba(255,255,255,0.2);font-size:10px;padding:2px 0">还没有好友</div>';return;}
+  el.innerHTML=friends.map(f=>
+    `<div class="friend-item"><span>👤 ${f}</span><span><span class="foffline">●</span><span style="color:rgba(255,255,255,0.2);font-size:9px;cursor:pointer;margin-left:4px" onclick="removeFriend('${f}')">✕</span></span></div>`
+  ).join('');
+}
+renderFriends();
+
+// Friend panel toggle
+document.getElementById('friendClose').addEventListener('click',()=>{document.getElementById('friendPanel').classList.remove('show');});
+document.getElementById('rhLeader').addEventListener('dblclick',()=>{document.getElementById('friendPanel').classList.toggle('show');renderFriends();});
+
 // ===================== CHAT =====================
 function toggleChat(){document.getElementById('chatBox').classList.toggle('show');}
 function sendChat(){
@@ -853,7 +1171,7 @@ function update(){
   if(S.en<15){S.hp=clamp(S.hp-0.08,0,100);if(A.exT<=0&&!A.act){A.exp='dizzy';A.exT=70;}}
   if(S.poop>2)S.hp=clamp(S.hp-0.05*S.poop,0,100);
   if(S.poop>4&&A.exT<=0&&!A.act)A.exp='sad';
-  if(S.fn<=0||S.hp<=0){dead=true;showGO();return;}
+  if(S.fn<=0||S.hp<=0){dead=true;if(MODE==='online'){showRevive();}else{showGO();}return;}
   autoPT++;
   if(S.fn>55&&autoPT>200&&!A.act&&S.poop<12){autoPT=0;S.fn-=3;S.poop++;S.cl=clamp(S.cl-3,0,100);}
   if(A.exT>0){A.exT--;if(A.exT===0)A.exp=S.fn<22?'hungry':S.poop>3?'sad':S.en<18?'dizzy':'normal';}
