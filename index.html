@@ -266,22 +266,54 @@ canvas{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh}
 
 <!-- ===== WELCOME ===== -->
 <div id="welcome">
+  <div style="position:absolute;top:clamp(8px,2vh,16px);right:clamp(10px,2vw,20px);z-index:5;display:flex;gap:6px;align-items:center">
+    <span style="color:rgba(255,255,255,0.3);font-size:clamp(10px,1.2vw,14px)" id="wlStatus">未登录</span>
+    <button class="btn-hud" onclick="showLoginUI()" id="wlBtn" style="font-size:clamp(10px,1.2vw,14px)">登录/注册</button>
+  </div>
   <div class="wc">🐷</div>
   <div class="wt">猪猪侠进化之旅</div>
-  <div class="ws">养成 · 进化 · 联机对战</div>
-  <div class="mode-btns">
-    <div class="mode-btn" onclick="startSingle()"><span class="mi">📖</span><span class="mt">单人模式</span><span class="md">独自养成，放松体验</span></div>
-    <div class="mode-btn" onclick="showOnline()"><span class="mi">🌐</span><span class="mt">联机模式</span><span class="md">创建房间与好友竞技</span></div>
-    <div class="mode-btn" onclick="startBotBattle()"><span class="mi">🤖</span><span class="mt">机器人对战</span><span class="md">与AI猪猪侠比赛</span></div>
+  <div class="ws" style="margin:2px 0 8px">养成 · 进化 · 联机对战</div>
+  
+  <!-- Login/Register -->
+  <div id="loginPanel" style="display:none;margin:4px 0">
+    <div style="display:flex;gap:6px;justify-content:center;margin-bottom:4px">
+      <button onclick="switchLoginTab('login')" id="ltab1" style="background:🔹;border:none;border-radius:8px;padding:4px 16px;color:#fff;font-size:13px;cursor:pointer;font-family:inherit;font-weight:bold">登录</button>
+      <button onclick="switchLoginTab('register')" id="ltab2" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:4px 16px;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;font-family:inherit">注册</button>
+    </div>
+    <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
+      <input type="text" id="lUser" placeholder="用户名" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px 12px;color:#fff;font-size:13px;outline:none;width:clamp(90px,14vw,130px);font-family:inherit">
+      <input type="password" id="lPass" placeholder="密码" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px 12px;color:#fff;font-size:13px;outline:none;width:clamp(90px,14vw,130px);font-family:inherit">
+      <button onclick="doLogin()" id="loginBtn" style="background:linear-gradient(135deg,#e91e63,#c2185b);border:none;border-radius:8px;padding:6px 18px;color:#fff;font-size:13px;cursor:pointer;font-family:inherit;font-weight:bold">登录</button>
+    </div>
+    <div id="loginMsg" style="color:rgba(255,255,255,0.4);font-size:11px;margin:3px 0"></div>
   </div>
-  <div class="tips">
-    <div>🍚吃饭加饱腹</div><div>🏃运动加心情</div>
-    <div>💩满了要排便</div><div>🧹打扫卫生</div>
-    <div>🤚摸头互动</div><div>💪训练加力量</div>
-    <div>⭐小游戏赚币</div><div>🎯Lv5/10/15/20进化</div>
+  
+  <!-- Mode buttons -->
+  <div id="modeBtns" style="display:block">
+    <div class="mode-btns">
+      <div class="mode-btn" onclick="startSingle()"><span class="mi">📖</span><span class="mt">单人模式</span><span class="md">独自养成，放松体验</span></div>
+      <div class="mode-btn" onclick="showOnline()"><span class="mi">🌐</span><span class="mt">联机模式</span><span class="md">创建房间与好友竞技</span></div>
+      <div class="mode-btn" onclick="startBotBattle()"><span class="mi">🤖</span><span class="mt">机器人对战</span><span class="md">与AI猪猪侠比赛</span></div>
+    </div>
+  </div>
+  
+  <!-- How to play -->
+  <div class="tips" style="grid-template-columns:1fr;gap:2px;padding:8px 14px;margin-top:4px">
+    <div style="font-size:clamp(11px,1.4vw,15px);color:#ffd600;font-weight:bold;margin-bottom:2px">🎮 怎么玩？</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px 12px">
+      <div style="font-size:clamp(9px,1.1vw,13px);color:rgba(255,255,255,0.5)">🍚 吃饭→饱腹+经验</div>
+      <div style="font-size:clamp(9px,1.1vw,13px);color:rgba(255,255,255,0.5)">🏃 运动→心情+力量+经验</div>
+      <div style="font-size:clamp(9px,1.1vw,13px);color:rgba(255,255,255,0.5)">💩 拉屎→满了要排掉</div>
+      <div style="font-size:clamp(9px,1.1vw,13px);color:rgba(255,255,255,0.5)">🧹 打扫→清理便便</div>
+      <div style="font-size:clamp(9px,1.1vw,13px);color:rgba(255,255,255,0.5)">🤊 摸头→加心情(点猪也行)</div>
+      <div style="font-size:clamp(9px,1.1vw,13px);color:rgba(255,255,255,0.5)">💪 训练→加大量力量+经验</div>
+      <div style="font-size:clamp(9px,1.1vw,13px);color:rgba(255,255,255,0.5)">🛒 商店→买道具</div>
+      <div style="font-size:clamp(9px,1.1vw,13px);color:rgba(255,255,255,0.5)">⭐ 小游戏→赚金币经验</div>
+      <div style="font-size:clamp(9px,1.1vw,13px);color:rgba(255,255,255,0.5)">🏆 进化→Lv5/10/15/20变身</div>
+      <div style="font-size:clamp(9px,1.1vw,13px);color:rgba(255,255,255,0.5)">🔥 联机→开房间与好友竞技</div>
+    </div>
   </div>
 </div>
-
 <!-- ===== ARENA ===== -->
 <div class="arena" id="arena">
   <div class="atop">
@@ -900,6 +932,104 @@ function leaveOnlineGame(){
   document.getElementById('msgW').style.display='none';
 }
 
+// ===================== LOGIN / REGISTER =====================
+let loggedInUser = null;
+let loggedInProfile = null;
+
+function showLoginUI(){
+  const p = document.getElementById('loginPanel');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  document.getElementById('loginMsg').textContent = '';
+  document.getElementById('lUser').value = '';
+  document.getElementById('lPass').value = '';
+  switchLoginTab('login');
+}
+
+function switchLoginTab(tab){
+  document.getElementById('ltab1').style.background = tab === 'login' ? 'linear-gradient(135deg,#e91e63,#c2185b)' : 'rgba(255,255,255,0.06)';
+  document.getElementById('ltab1').style.color = tab === 'login' ? '#fff' : 'rgba(255,255,255,0.5)';
+  document.getElementById('ltab2').style.background = tab === 'register' ? 'linear-gradient(135deg,#e91e63,#c2185b)' : 'rgba(255,255,255,0.06)';
+  document.getElementById('ltab2').style.color = tab === 'register' ? '#fff' : 'rgba(255,255,255,0.5)';
+  document.getElementById('loginBtn').textContent = tab === 'login' ? '🔐 登录' : '📝 注册';
+  document.getElementById('loginBtn').dataset.tab = tab;
+  document.getElementById('loginMsg').textContent = '';
+}
+
+function doLogin(){
+  const user = document.getElementById('lUser').value.trim();
+  const pass = document.getElementById('lPass').value.trim();
+  const tab = document.getElementById('loginBtn').dataset.tab || 'login';
+  if(!user || !pass){ document.getElementById('loginMsg').textContent = '请输入用户名和密码'; return; }
+  
+  // Create temporary WS for login
+  const tempWs = new WebSocket(window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1'?'ws://localhost:3000':SERVER_URL);
+  document.getElementById('loginMsg').textContent = '连接中...';
+  document.getElementById('loginMsg').style.color = 'rgba(255,255,255,0.4)';
+  
+  tempWs.onopen = () => {
+    tempWs.send(JSON.stringify({type: tab, username: user, password: pass}));
+  };
+  tempWs.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    tempWs.close();
+    if(msg.ok){
+      loggedInUser = user.toLowerCase();
+      loggedInProfile = msg.profile;
+      document.getElementById('wlStatus').textContent = '👤 ' + msg.profile.nickname;
+      document.getElementById('wlBtn').textContent = '已登录';
+      document.getElementById('wlBtn').onclick = doLogout;
+      document.getElementById('loginPanel').style.display = 'none';
+      document.getElementById('loginMsg').textContent = '';
+      // Apply profile to game
+      if(msg.profile){
+        S.coin = msg.profile.coin || 30;
+        S.lv = msg.profile.lv || 1;
+        S.exp = msg.profile.exp || 0;
+        S.fn = msg.profile.fn || 70;
+        S.cl = msg.profile.cl || 80;
+        S.en = msg.profile.en || 60;
+        S.hp = msg.profile.hp || 65;
+        S.st = msg.profile.st || 10;
+        if(msg.profile.inv) S.inv = msg.profile.inv;
+      }
+      saveGame();
+      refUI();
+      // Try to auto-reconnect if WS was closed
+      if(!WS || WS.readyState !== WebSocket.OPEN){
+        window._pendingRoomAction = null;
+      }
+    } else {
+      document.getElementById('loginMsg').textContent = '⚠️ ' + (msg.err || '操作失败');
+      document.getElementById('loginMsg').style.color = '#ff5252';
+    }
+  };
+  tempWs.onerror = () => {
+    document.getElementById('loginMsg').textContent = '⚠️ 连接服务器失败';
+    document.getElementById('loginMsg').style.color = '#ff5252';
+  };
+}
+
+function doLogout(){
+  loggedInUser = null;
+  loggedInProfile = null;
+  document.getElementById('wlStatus').textContent = '未登录';
+  document.getElementById('wlBtn').textContent = '登录/注册';
+  document.getElementById('wlBtn').onclick = showLoginUI;
+}
+
+function saveProfileToServer(){
+  if(!loggedInUser) return;
+  // Create temp connection to save
+  const tempWs = new WebSocket(window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1'?'ws://localhost:3000':SERVER_URL);
+  tempWs.onopen = () => {
+    tempWs.send(JSON.stringify({type:'save_profile', username: loggedInUser, data: {
+      fn: S.fn, cl: S.cl, en: S.en, hp: S.hp, st: S.st,
+      lv: S.lv, exp: S.exp, coin: S.coin, inv: S.inv,
+    }}));
+    tempWs.close();
+  };
+}
+
 // ===================== ACCOUNT SYSTEM (localStorage) =====================
 const SAVE_KEY='zhuzhuxia_save';
 function saveGame(){
@@ -908,6 +1038,7 @@ function saveGame(){
     fn:S.fn,cl:S.cl,en:S.en,hp:S.hp,st:S.st,
     inv:S.inv,
   }));}catch(e){}
+  saveProfileToServer();
 }
 function loadGame(){
   try{
