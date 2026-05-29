@@ -326,6 +326,35 @@ canvas{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh}
   <div class="friend-add-row"><input type="text" id="friendInput" placeholder="输入昵称添加" maxlength="10"><button onclick="addFriend()">添加</button></div>
 </div>
 
+<!-- ===== HELP ===== -->
+<div class="mo" id="helpM">
+  <div class="mo-in" style="text-align:left;max-width:clamp(300px,50vw,500px)">
+    <h2 style="text-align:center">🐷 猪猪侠进化之旅</h2>
+    <div class="sub" style="text-align:center">养成 · 进化 · 联机对战</div>
+    <div style="color:rgba(255,255,255,0.7);font-size:clamp(11px,1.3vw,15px);line-height:1.9;margin:6px 0">
+      <b style="color:#ffd600">🎯 目标：</b>照顾好猪猪侠，不断升级进化！<br>
+      <b style="color:#ffd600">🏆 进化路线：</b>小猪猪Lv1→猪猪侠Lv5→铁拳猪猪侠Lv10→铠甲猪猪侠Lv15→宇宙无敌超人强霸王猪Lv20<br><br>
+      <b style="color:#ffd600">🎮 操作：</b><br>
+      🍚<b>吃饭</b> +饱腹+经验 &emsp; 💩<b>拉屎</b> 排掉废物<br>
+      🏃<b>运动</b> +心情+力量+经验 &emsp; 🧹<b>打扫</b> 清理便便<br>
+      🤊<b>摸头</b> 点猪也行 +心情 &emsp; 💪<b>训练</b> +大量力量+经验<br>
+      🛒<b>商店</b> 买道具 &emsp; ⭐<b>小游戏</b> 赚金币经验<br><br>
+      <b style="color:#ffd600">🌐 联机模式：</b><br>
+      👥 创建房间让朋友输入房间号加入<br>
+      🤖 房主可以添加机器人对手<br>
+      ⚔️ 点其他玩家头上的挑战按钮进入角斗场<br>
+      👊 角斗场中狂点出招打掉对方血条<br>
+      💀 死了点复活继续<br>
+      📋 完成任务拿额外奖励<br><br>
+      <b style="color:#ffd600">💡 小提示：</b><br>
+      属性归零会死亡，联机模式可以复活<br>
+      双击排行榜打开好友面板<br>
+      数据自动保存，刷新网页不丢失！
+    </div>
+    <button class="bc" onclick="document.getElementById('helpM').classList.remove('show')" style="display:block;margin:6px auto">知道了</button>
+  </div>
+</div>
+
 <!-- ===== LOBBY ===== -->
 <div id="lobby">
   <div style="text-align:center">
@@ -392,6 +421,7 @@ canvas{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh}
     <div class="hl"><span class="lv-badge" id="lvB">Lv.1</span><span class="evo-badge" id="evoB">🐷小猪猪</span></div>
     <div class="hr-center" id="titleCenter">🐷 猪猪侠进化之旅</div>
     <div class="hr-right">
+      <button class="btn-hud" onclick="document.getElementById('helpM').classList.add('show')">❓</button>
       <button class="btn-hud" id="qBtn">📋<span id="qD">0</span>/5</button>
       <button class="btn-hud" id="invBtn">🎒</button>
       <span class="coin-badge">🪙<span id="coinV">30</span></span>
@@ -659,13 +689,14 @@ function handleServerMsg(msg){
       showArenaResult(msg);
       break;
     case 'player_revived':
+      if(msg.players)MP.players=msg.players;
       if(msg.playerId===MP.myId){
-        const me_=msg.players.find(p=>p.id===MP.myId);
+        const me_=MP.players.find(p=>p.id===MP.myId);
         if(me_)syncStatsFromServer(me_);
         msg('🔄已复活！');
+        dead=false;
       }else{
         msg('🔄'+(msg.player?msg.player.nickname:'')+'复活了！');
-        MP.players=msg.players||[];
       }
       break;
     case 'chat':
@@ -802,7 +833,7 @@ function updateOnlinePlayers(){
     badge.style.cssText=`position:absolute;left:${px}px;bottom:${H-py+10}px;transform:translateX(-50%);text-align:center;z-index:11;pointer-events:none`;
     badge.innerHTML=`
       <div class="pbadge" style="position:static">
-        <div class="pbchar" style="font-size:clamp(18px,3.5vw,36px)">${s.ic}</div>
+        <div class="pbchar" style="font-size:clamp(30px,6vw,56px)">${s.ic}</div>
         <div class="pbname" style="color:${p.color||'#fff'}">${p.nickname}</div>
         <div class="pblv">Lv.${p.lv||1} ${s.n}</div>
         <div class="pbact"></div>
@@ -904,9 +935,12 @@ function showArena(data){
   arenaOppId=data.p1Id===MP.myId?data.p2Id:data.p1Id;
 
   const isP1=data.p1Id===MP.myId;
-  document.getElementById('arenaChar1').textContent=stage(isP1?S.lv:(MP.players.find(p=>p.id===data.p2Id)?.lv||1)).ic;
+  const myLv=S.lv||1;
+  const opp=MP.players.find(p=>p.id===arenaOppId);
+  const oppLv=opp?opp.lv:1;
+  document.getElementById('arenaChar1').textContent=stage(isP1?myLv:oppLv).ic;
   document.getElementById('arenaName1').textContent=isP1?data.p1Nick:data.p2Nick;
-  document.getElementById('arenaChar2').textContent=stage(!isP1?S.lv:(MP.players.find(p=>p.id===data.p1Id)?.lv||1)).ic;
+  document.getElementById('arenaChar2').textContent=stage(isP1?oppLv:myLv).ic;
   document.getElementById('arenaName2').textContent=!isP1?data.p1Nick:data.p2Nick;
 
   document.getElementById('arenaHp1').style.width='100%';
@@ -1021,9 +1055,10 @@ function showRevive(){
 function reviveMe(){
   if(!WS||WS.readyState!==WebSocket.OPEN)return;
   WS.send(JSON.stringify({type:'revive'}));
+  S.fn=60;S.cl=60;S.en=60;S.hp=60;refUI();
   document.getElementById('reviveOverlay').classList.remove('show');
   dead=false;
-  // Server will reset our stats and broadcast
+  msg("🔄复活中...");
 }
 
 // ===================== FRIENDS =====================
