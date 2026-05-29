@@ -478,11 +478,6 @@ function joinRoom(){
     window._pendingRoomAction=null;
   }
 }
-      setTimeout(()=>clearInterval(c),8000);
-    }
-  };
-  doJoin();
-}
 
 function handleServerMsg(msg){
   switch(msg.type){
