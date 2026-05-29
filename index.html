@@ -248,7 +248,7 @@ canvas{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh}
         <button class="lb" onclick="copyRoomCode()">📋 复制房间号</button>
       </div>
     </div>
-    <div id="lobbyConnecting" style="display:none;color:rgba(255,255,255,0.4);font-size:16px;margin:20px">正在连接服务器...</div>
+    <div id="lobbyConnecting" style="display:none;color:rgba(255,255,255,0.5);font-size:16px;margin:20px">⏳ 正在连接服务器...</div>
     <div id="lobbyError" style="display:none;color:#ff5252;font-size:14px;margin:8px"></div>
   </div>
 </div>
@@ -398,20 +398,35 @@ function showOnline(){document.getElementById('welcome').classList.add('hide');d
 function backToMenu(){hideAllLobby();disconnectWS();document.getElementById('welcome').classList.remove('hide');document.getElementById('connMsg').classList.remove('show');}
 function hideAllLobby(){document.getElementById('lobby').classList.remove('show');}
 
-function connectWS(){
+let wsRetryCount=0;
+let wsRetryTimer=null;
+
+function connectWS(retry){
   if(WS&&WS.readyState===WebSocket.OPEN)return;
-  document.getElementById('lobbyConnecting').style.display='block';
-  document.getElementById('lobbyError').style.display='none';
-  // Try deployed server first, fallback to local
+  if(retry) wsRetryCount=0;
+  const connectingEl=document.getElementById('lobbyConnecting');
+  const errorEl=document.getElementById('lobbyError');
+  connectingEl.style.display='block';
+  if(wsRetryCount===0) connectingEl.textContent='⏳ 正在连接服务器...';
+  else connectingEl.textContent='⏳ 正在唤醒服务器('+wsRetryCount+'/10)...';
+  errorEl.style.display='none';
+
   const url = window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1'?LOCAL_URL:SERVER_URL;
   try{WS=new WebSocket(url);}catch(e){
-    document.getElementById('lobbyConnecting').style.display='none';
+    connectingEl.style.display='none';
     showLobbyError('无法连接服务器');
     return;
   }
   WS.onopen=()=>{
-    document.getElementById('lobbyConnecting').style.display='none';
+    connectingEl.style.display='none';
     MP.connected=true;
+    wsRetryCount=0;
+    if(wsRetryTimer){clearTimeout(wsRetryTimer);wsRetryTimer=null;}
+    // Send pending action
+    if(window._pendingRoomAction){
+      WS.send(JSON.stringify(window._pendingRoomAction));
+      window._pendingRoomAction=null;
+    }
   };
   WS.onmessage=(e)=>{
     try{handleServerMsg(JSON.parse(e.data));}catch(err){}
@@ -424,26 +439,31 @@ function connectWS(){
     }
   };
   WS.onerror=()=>{
-    document.getElementById('lobbyConnecting').style.display='none';
-    showLobbyError('连接失败，请检查服务器状态');
+    // Retry logic for Railway free tier sleep
+    if(wsRetryCount<10){
+      wsRetryCount++;
+      connectingEl.textContent='⏳ 正在唤醒服务器('+wsRetryCount+'/10)...';
+      if(wsRetryTimer)clearTimeout(wsRetryTimer);
+      wsRetryTimer=setTimeout(()=>{
+        WS=null;
+        connectWS(false);
+      },3000);
+    }else{
+      connectingEl.style.display='none';
+      showLobbyError('服务器唤醒失败，请稍后重试');
+      window._pendingRoomAction=null;
+    }
   };
 }
 function showLobbyError(t){const el=document.getElementById('lobbyError');el.textContent=t;el.style.display='block';}
 
 function createRoom(){
   MP.nickname=prompt('输入你的昵称：',MP.nickname)||MP.nickname;
-  connectWS();
+  window._pendingRoomAction={type:'create_room',nickname:MP.nickname};
+  connectWS(true);
   if(WS&&WS.readyState===WebSocket.OPEN){
-    WS.send(JSON.stringify({type:'create_room',nickname:MP.nickname}));
-  }else{
-    // Wait for connection
-    const check=setInterval(()=>{
-      if(WS&&WS.readyState===WebSocket.OPEN){
-        clearInterval(check);
-        WS.send(JSON.stringify({type:'create_room',nickname:MP.nickname}));
-      }
-    },200);
-    setTimeout(()=>clearInterval(check),8000);
+    WS.send(JSON.stringify(window._pendingRoomAction));
+    window._pendingRoomAction=null;
   }
 }
 
@@ -451,17 +471,13 @@ function joinRoom(){
   const code=document.getElementById('joinInput').value.trim();
   if(!code||code.length!==4){showLobbyError('请输入4位房间号');return;}
   MP.nickname=prompt('输入你的昵称：',MP.nickname)||MP.nickname;
-  connectWS();
-  const doJoin=()=>{
-    if(WS&&WS.readyState===WebSocket.OPEN)
-      WS.send(JSON.stringify({type:'join_room',code,nickname:MP.nickname}));
-    else{
-      const c=setInterval(()=>{
-        if(WS&&WS.readyState===WebSocket.OPEN){
-          clearInterval(c);
-          WS.send(JSON.stringify({type:'join_room',code,nickname:MP.nickname}));
-        }
-      },200);
+  window._pendingRoomAction={type:'join_room',code,nickname:MP.nickname};
+  connectWS(true);
+  if(WS&&WS.readyState===WebSocket.OPEN){
+    WS.send(JSON.stringify(window._pendingRoomAction));
+    window._pendingRoomAction=null;
+  }
+}
       setTimeout(()=>clearInterval(c),8000);
     }
   };
